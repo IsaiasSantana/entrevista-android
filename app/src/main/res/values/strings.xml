@@ -6,4 +6,13 @@
     <string name="altura">Altura</string>
     <string name="genero">Genero</string>
     <string name="title_activity_details">DetailsActivity</string>
+    <string name="nome_personagem">Nome do personagem</string>
+    <string name="cor_cabelo">Cor do cabelo</string>
+    <string name="cor_pele">Cor da pele</string>
+    <string name="cor_olho">Cor dos olhos</string>
+    <string name="data_nascimento">Data de nascimento</string>
+    <string name="planeta_natal">Planeta natal</string>
+    <string name="especie">Espécie</string>
+    <string name="detalhes_personagem">Outros detalhes</string>
+    <string name="descricao_imagem_toolbar">Logo do Star Wars</string>
 </resources>

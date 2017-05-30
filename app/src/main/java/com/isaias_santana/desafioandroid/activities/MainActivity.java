@@ -2,6 +2,7 @@ package com.isaias_santana.desafioandroid.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -141,7 +142,7 @@ public class MainActivity extends MvpAppCompatActivity
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v)
             {
-
+                startActivity(new Intent(MainActivity.this,DetailsActivity.class));
             }
         });
 
