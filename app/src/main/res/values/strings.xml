@@ -15,4 +15,5 @@
     <string name="especie">Espécie</string>
     <string name="detalhes_personagem">Outros detalhes</string>
     <string name="descricao_imagem_toolbar">Logo do Star Wars</string>
+    <string name="title_activity_teste">Teste</string>
 </resources>
