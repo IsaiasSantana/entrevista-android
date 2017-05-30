@@ -14,10 +14,12 @@ import java.util.ArrayList;
 
 public class People implements Serializable, Parcelable
 {
+    private long id;
     private String name;
     private String height;
     private String gender;
     private String mass;
+    private int isFavorite;
 
     @SerializedName("hair_color")
     private String hairColor;
@@ -42,6 +44,7 @@ public class People implements Serializable, Parcelable
 
     protected People(Parcel in)
     {
+        id = in.readLong();
         name = in.readString();
         height = in.readString();
         gender = in.readString();
@@ -52,6 +55,7 @@ public class People implements Serializable, Parcelable
         birthYear = in.readString();
         homeWorld = in.readString();
         species = in.createStringArrayList();
+        isFavorite = in.readInt();
     }
 
     public static final Creator<People> CREATOR = new Creator<People>()
@@ -152,8 +156,18 @@ public class People implements Serializable, Parcelable
         return 0;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(height);
         dest.writeString(gender);
@@ -164,5 +178,14 @@ public class People implements Serializable, Parcelable
         dest.writeString(birthYear);
         dest.writeString(homeWorld);
         dest.writeStringList(species);
+        dest.writeInt(isFavorite);
+    }
+
+    public int getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(int isFavorite) {
+        this.isFavorite = isFavorite;
     }
 }
