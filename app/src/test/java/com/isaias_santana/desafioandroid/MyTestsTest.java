@@ -21,8 +21,22 @@ public class MyTestsTest
         assertEquals(2,getPage("2"));
     }
 
+    @Test
+    public void getIdPlanetOrSpecie() throws Exception
+    {
+        assertEquals("9",getIdPlanetOrSpecie("http://swapi.co/api/planets/9/","planets"));
+        assertEquals("1",getIdPlanetOrSpecie("http://swapi.co/api/planets/1/","planets"));
+        assertEquals("129",getIdPlanetOrSpecie("http://swapi.co/api/species/129/","species"));
+    }
+
     private int getPage(String page)
     {
         return Integer.parseInt(page.substring(page.length()-1,page.length()));
+    }
+
+    private String getIdPlanetOrSpecie(String url,String tag)
+    {
+       return url.substring(url.lastIndexOf(tag),url.length()).split("/")[1];
+
     }
 }

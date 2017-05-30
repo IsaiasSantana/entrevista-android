@@ -1,11 +1,14 @@
-package com.isaias_santana.desafioandroid.mvp.model.mainActivity;
+package com.isaias_santana.desafioandroid.domain.interfaces;
 
+import com.isaias_santana.desafioandroid.domain.Planet;
+import com.isaias_santana.desafioandroid.domain.Specie;
 import com.isaias_santana.desafioandroid.domain.PeopleResult;
 
 
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -13,7 +16,7 @@ import retrofit2.http.Query;
  * email: isds.santana@gmail.com
  */
 
-interface PeopleAPI
+public interface PeopleAPI
 {
     /**
      * Faz as buscas dos personagens.
@@ -22,4 +25,10 @@ interface PeopleAPI
      */
     @GET("people/")
     Call<PeopleResult> getPeoples(@Query("page") int page);
+
+    @GET("species/{id}")
+    Call<Specie> getEspecieName(@Path("id") String id);
+
+    @GET("planets/{id}")
+    Call<Planet> getPlanetName(@Path("id") String id);
 }

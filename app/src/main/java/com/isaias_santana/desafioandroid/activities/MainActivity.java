@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +44,8 @@ public class MainActivity extends MvpAppCompatActivity
     MainActivityPresenter presenter;
     private final PeopleAdapter peopleAdapter = new PeopleAdapter();
     private  ProgressBar progressBar;
+    private final String LOG = "MainActivty";
+    private boolean isPause;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,13 +57,42 @@ public class MainActivity extends MvpAppCompatActivity
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_main_activity);
         initRecyclerView();
+
+        isPause = false;
+
+        Log.d(LOG,"onCreate() chamado");
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        Log.d(LOG,"onStart() chamado");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setPause(true);
+        Log.d(LOG,"OnPause() chamado");
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        presenter.getPeoples();
+       if(!isPause()) presenter.getPeoples();
+        else
+            setPause(false);
+        Log.d(LOG,"onResume() chamado");
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        Log.d(LOG,"onStop() chamado");
+
     }
 
     @Override
@@ -142,32 +175,14 @@ public class MainActivity extends MvpAppCompatActivity
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v)
             {
-                startActivity(new Intent(MainActivity.this,DetailsActivity.class));
+                Intent intent = new Intent(MainActivity.this,DetailsActivity.class);
+                People p =  presenter.getDatas().get(position);
+                intent.putExtra("people",(Parcelable) p);
+                startActivity(intent);
             }
         });
 
-        //Listener para o Scroll da lista
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                super.onScrolled(recyclerView, dx, dy);
-
-                LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int lastVisible = llm.findLastCompletelyVisibleItemPosition() + 1;
-
-                if(recyclerView.getAdapter().getItemCount() == lastVisible && !presenter.isLoading())
-                {
-                    presenter.getMoreData();
-                }
-            }
-        });
+        recyclerView.addOnScrollListener(initScrollListener());
     }
 
     @Override
@@ -200,6 +215,41 @@ public class MainActivity extends MvpAppCompatActivity
             }
         }
         return filteredModelList;
+    }
+
+    private RecyclerView.OnScrollListener initScrollListener()
+    {
+        return  new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int lastVisible = llm.findLastCompletelyVisibleItemPosition() + 1;
+
+                if(recyclerView.getAdapter().getItemCount() == lastVisible && !presenter.isLoading())
+                {
+                    Log.d(LOG,"onScrolled() chamado");
+
+                    presenter.getMoreData();
+                }
+            }
+        };
+    }
+
+    private void setPause(boolean isAttch){
+        this.isPause = isAttch;
+    }
+
+    private boolean isPause(){
+        return isPause;
     }
 
 }

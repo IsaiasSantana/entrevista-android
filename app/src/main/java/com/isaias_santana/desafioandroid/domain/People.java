@@ -1,5 +1,8 @@
 package com.isaias_santana.desafioandroid.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
  * Created by isaias on 29/05/17.
  */
 
-public class People implements Serializable
+public class People implements Serializable, Parcelable
 {
     private String name;
     private String height;
@@ -37,6 +40,32 @@ public class People implements Serializable
     public People(){}
 
 
+    protected People(Parcel in)
+    {
+        name = in.readString();
+        height = in.readString();
+        gender = in.readString();
+        mass = in.readString();
+        hairColor = in.readString();
+        skinColor = in.readString();
+        eyeColor = in.readString();
+        birthYear = in.readString();
+        homeWorld = in.readString();
+        species = in.createStringArrayList();
+    }
+
+    public static final Creator<People> CREATOR = new Creator<People>()
+    {
+        @Override
+        public People createFromParcel(Parcel in) {
+            return new People(in);
+        }
+
+        @Override
+        public People[] newArray(int size) {
+            return new People[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -116,5 +145,24 @@ public class People implements Serializable
 
     public void setSpecies(ArrayList<String> species) {
         this.species = species;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(height);
+        dest.writeString(gender);
+        dest.writeString(mass);
+        dest.writeString(hairColor);
+        dest.writeString(skinColor);
+        dest.writeString(eyeColor);
+        dest.writeString(birthYear);
+        dest.writeString(homeWorld);
+        dest.writeStringList(species);
     }
 }

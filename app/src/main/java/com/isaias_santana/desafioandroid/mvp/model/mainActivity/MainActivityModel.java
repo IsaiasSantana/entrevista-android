@@ -7,8 +7,12 @@ import android.util.Log;
 
 import com.isaias_santana.desafioandroid.domain.People;
 import com.isaias_santana.desafioandroid.domain.PeopleResult;
+import com.isaias_santana.desafioandroid.domain.Planet;
+import com.isaias_santana.desafioandroid.domain.Specie;
+import com.isaias_santana.desafioandroid.domain.interfaces.PeopleAPI;
 import com.isaias_santana.desafioandroid.mvp.presenter.mainActivity.MainActivityPresenterI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,6 +64,8 @@ public class MainActivityModel implements MainActivityModelI
                             {
                                 Log.d("model","Sucesso!");
                                 presenter.setPeople(peoples,peopleResult.getNext());
+                                getHomeWorld(peoples);
+                                getSpecie(peoples);
                             }
                             else presenter.setPeople(null,null);
 
@@ -82,5 +88,62 @@ public class MainActivityModel implements MainActivityModelI
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
+
+    private void getHomeWorld(final List<People> peoples)
+    {
+        for(final People p : peoples)
+        {
+            Call<Planet> call = peopleAPI
+                    .getPlanetName(getIdPlanetOrSpecie(p.getHomeWorld(),"planets"));
+            call.enqueue(new Callback<Planet>() {
+                @Override
+                public void onResponse(Call<Planet> call, Response<Planet> response)
+                {
+                    if(response.isSuccessful())
+                    {
+                        p.setHomeWorld(response.body().getName());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Planet> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+    private void getSpecie(final List<People> peoples)
+    {
+        for(final People p : peoples)
+        {
+            Call<Specie> call = peopleAPI
+                    .getEspecieName(getIdPlanetOrSpecie(p.getSpecies().get(0),"species"));
+            call.enqueue(new Callback<Specie>() {
+                @Override
+                public void onResponse(Call<Specie> call, Response<Specie> response)
+                {
+                    if(response.isSuccessful())
+                    {
+                        ArrayList<String> species = new ArrayList<String>();
+                        species.add(response.body().getName());
+                        p.setSpecies(species);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Specie> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+    private String getIdPlanetOrSpecie(String url,String tag)
+    {
+        return url.substring(url.lastIndexOf(tag),url.length()).split("/")[1];
     }
 }
