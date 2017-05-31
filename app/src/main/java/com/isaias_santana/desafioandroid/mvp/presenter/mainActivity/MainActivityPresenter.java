@@ -1,9 +1,12 @@
 package com.isaias_santana.desafioandroid.mvp.presenter.mainActivity;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.isaias_santana.desafioandroid.domain.DBHelper;
 import com.isaias_santana.desafioandroid.domain.People;
 import com.isaias_santana.desafioandroid.mvp.model.mainActivity.MainActivityModel;
 import com.isaias_santana.desafioandroid.mvp.view.MainActivityViewI;
@@ -22,6 +25,7 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
                    MainActivityPresenterI.PresenterToView
 {
     private final MainActivityModel model;
+    private DBHelper dbHelper;
 
     /*Para realizar paginação*/
     private String nextPage;
@@ -62,6 +66,7 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
             for(People p : peoples)
             {
                 this.peoples.add(p);
+                saveDBInterno(p);
             }
 
             getViewState().updateRecyclerView(peoples);
@@ -113,6 +118,12 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
 
     }
 
+    public void setContext(Context context)
+    {
+        if(dbHelper == null)
+            dbHelper = new DBHelper(context);
+    }
+
     @Override
     public List<People> getDatas() {
         return this.peoples;
@@ -125,6 +136,23 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
     private int getPage(String page)
     {
         return Integer.parseInt(page.substring(page.length()-1,page.length()));
+    }
+
+    private void saveDBInterno(final People p)
+    {
+        new AsyncTask<Void,Void,Void>()
+        {
+            @Override
+            protected Void doInBackground(Void... voids)
+            {
+                if(!dbHelper.exists(p.getName()))
+                {
+                    long id =  dbHelper.save(p);
+                    p.setId(id);
+                }
+                return null;
+            }
+        }.execute();
     }
 
 }

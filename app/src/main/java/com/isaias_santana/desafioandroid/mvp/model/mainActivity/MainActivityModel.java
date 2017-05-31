@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 
+import com.isaias_santana.desafioandroid.domain.DBHelper;
 import com.isaias_santana.desafioandroid.domain.People;
 import com.isaias_santana.desafioandroid.domain.PeopleResult;
 import com.isaias_santana.desafioandroid.domain.Planet;
@@ -32,6 +33,7 @@ public class MainActivityModel implements MainActivityModelI
     private final MainActivityPresenterI.PresenterToModel presenter;
     private final PeopleAPI peopleAPI;
     private final Handler handler;
+
 
     public MainActivityModel(MainActivityPresenterI.PresenterToModel presenter)
     {

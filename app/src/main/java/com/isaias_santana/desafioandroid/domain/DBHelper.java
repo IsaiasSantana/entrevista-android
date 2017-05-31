@@ -49,6 +49,7 @@ public class DBHelper extends SQLiteOpenHelper
     {
         Log.d(TAG,"Criando o banco");
         db.execSQL(TABLE_PEOPLE);
+        Log.d(TAG,"Tabela criada!");
     }
 
     @Override
@@ -109,13 +110,27 @@ public class DBHelper extends SQLiteOpenHelper
         try
         {
             //SELECT * people WHERE is_favorite = 1
-            Cursor c = db.query("people",null,"is_favorite=?",whereArgs,null,null,"name");
+            Cursor c = db.query("people",null,"is_favorite=?",whereArgs,null,null,"name",null);
             return toList(c);
         }
         finally {
             db.close();
         }
     }
+
+    public boolean exists(String name)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        try
+        {
+            Cursor c = db.query("people",null,"name=?",new String[]{name},null,null,null,null);
+            return c.getCount() > 0;
+        }
+        finally {
+            db.close();
+        }
+    }
+
 
     private List<People> toList(Cursor c)
     {

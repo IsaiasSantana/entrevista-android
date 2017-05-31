@@ -60,6 +60,7 @@ public class MainActivity extends MvpAppCompatActivity
 
         isPause = false;
 
+        presenter.setContext(this);
         Log.d(LOG,"onCreate() chamado");
     }
 
