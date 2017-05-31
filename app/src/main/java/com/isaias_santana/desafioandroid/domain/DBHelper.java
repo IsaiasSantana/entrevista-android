@@ -2,10 +2,12 @@ package com.isaias_santana.desafioandroid.domain;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,6 +104,49 @@ public class DBHelper extends SQLiteOpenHelper
      */
     public List<People> favorites()
     {
+        SQLiteDatabase db =  getWritableDatabase();
+        String whereArgs[] = new String[]{"1"};
+        try
+        {
+            //SELECT * people WHERE is_favorite = 1
+            Cursor c = db.query("people",null,"is_favorite=?",whereArgs,null,null,"name");
+            return toList(c);
+        }
+        finally {
+            db.close();
+        }
+    }
+
+    private List<People> toList(Cursor c)
+    {
+        List<People> peoples = new ArrayList<>();
+        if(c.moveToFirst())
+        {
+            do
+            {
+                People people = new People();
+
+                people.setId(c.getLong(c.getColumnIndex("_id")));
+                people.setHeight(c.getString(c.getColumnIndex("height")));
+                people.setGender(c.getString(c.getColumnIndex("gender")));
+                people.setMass(c.getString(c.getColumnIndex("mass")));
+                people.setHairColor(c.getString(c.getColumnIndex("hairColor")));
+                people.setSkinColor(c.getString(c.getColumnIndex("skinColor")));
+                people.setEyeColor(c.getString(c.getColumnIndex("eyeColor")));
+                people.setBirthYear(c.getString(c.getColumnIndex("birthYear")));
+                people.setHomeWorld(c.getString(c.getColumnIndex("homeWorld")));
+
+                ArrayList<String> species = new ArrayList<>();
+                species.add(c.getString(c.getColumnIndex("species")));
+
+                people.setSpecies(species);
+                people.setIsFavorite(c.getInt(c.getColumnIndex("is_favorite")));
+
+                peoples.add(people);
+            }while(c.moveToNext());
+
+            return peoples;
+        }
         return null;
     }
 }
