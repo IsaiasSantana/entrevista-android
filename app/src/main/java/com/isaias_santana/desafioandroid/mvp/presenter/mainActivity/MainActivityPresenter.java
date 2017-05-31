@@ -58,13 +58,14 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
 
         //Quando o model retorna os dados. Salvo na lista this.peoples. Serve para manter os
         //elementos quando a Activity é recriada.
-        if(page != null)
+        if(nextPage != null)
         {
-            Log.d("model","página anterior: "+getPage(page));
+            Log.d("model","página anterior: "+nextPage);
             nextPage = page;
-            Log.d("model","página atual: "+getPage(page));
+            Log.d("model","página atual: "+page);
             for(People p : peoples)
             {
+                Log.d("model","personagem: "+p.getName());
                 this.peoples.add(p);
                 saveDBInterno(p);
             }
@@ -75,7 +76,6 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
         }
         else
         {
-            nextPage = null;
             isLoading = true;
         }
     }
@@ -145,9 +145,20 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
             @Override
             protected Void doInBackground(Void... voids)
             {
-                if(!dbHelper.exists(p.getName()))
+                People people;
+                people = dbHelper.exists(p.getName());
+
+                if( people != null) // personagem existe. Seta o id e o campo de favorito.
                 {
-                    long id =  dbHelper.save(p);
+                    Log.d("mainPresenter",people.getName()+" "+people.getIsFavorite()+" "+people.getId()+" existe");
+                    p.setId(people.getId());
+                    p.setIsFavorite(people.getIsFavorite());
+                }
+                else
+                {
+                    //personagem não existe, salva o personagem no banco.
+                    Log.d("mainPresenter",p.getName()+" "+p.getIsFavorite()+" "+p.getId()+" Não existe.");
+                    long id = dbHelper.save(p);
                     p.setId(id);
                 }
                 return null;

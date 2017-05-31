@@ -118,18 +118,35 @@ public class DBHelper extends SQLiteOpenHelper
         }
     }
 
-    public boolean exists(String name)
+    public boolean isfFavorite(People p)
     {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db =  getWritableDatabase();
+        String whereArgs[] = new String[]{p.getName(),"1"};
         try
         {
-            Cursor c = db.query("people",null,"name=?",new String[]{name},null,null,null,null);
+
+            //SELECT * people WHERE name = "um nome" && is_favorite = 1
+            Cursor c = db.query("people",null,"name=? AND is_favorite=?",whereArgs,null,null,null,null);
             return c.getCount() > 0;
         }
         finally {
             db.close();
         }
     }
+
+    public People exists(String name)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        try
+        {
+            Cursor c = db.query("people",null,"name=?",new String[]{name},null,null,null,null);
+            return (c.getCount() > 0) ? toList(c).get(0) : null;
+        }
+        finally {
+            db.close();
+        }
+    }
+
 
 
     private List<People> toList(Cursor c)
@@ -142,6 +159,7 @@ public class DBHelper extends SQLiteOpenHelper
                 People people = new People();
 
                 people.setId(c.getLong(c.getColumnIndex("_id")));
+                people.setName(c.getString(c.getColumnIndex("name")));
                 people.setHeight(c.getString(c.getColumnIndex("height")));
                 people.setGender(c.getString(c.getColumnIndex("gender")));
                 people.setMass(c.getString(c.getColumnIndex("mass")));

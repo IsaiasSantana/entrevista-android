@@ -2,25 +2,35 @@ package com.isaias_santana.desafioandroid.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.isaias_santana.desafioandroid.R;
 import com.isaias_santana.desafioandroid.domain.People;
+import com.isaias_santana.desafioandroid.mvp.presenter.detailActivity.DetailActityPresenter;
+import com.isaias_santana.desafioandroid.mvp.view.DetailActivityViewI;
 
 /**
  * Created by isaias on 29/05/17.
  */
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends MvpAppCompatActivity
+                             implements DetailActivityViewI
+{
+
+    @InjectPresenter
+    DetailActityPresenter presenter;
 
     private FloatingActionButton fab;
     private boolean isFavorite;
+    private People people;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,15 +40,40 @@ public class DetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        People p = getIntent().getParcelableExtra("people");
+        people = getIntent().getParcelableExtra("people");
+        presenter.setContext(this);
+        presenter.setPeople(people);
 
-        getSupportActionBar().setTitle(p.getName());
+        getSupportActionBar().setTitle(people.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        initViews(p);
+        initViews(people);
 
         isFavorite = false;
 
-        Log.d("people",p.getName());
+        Log.d("people",people.getName());
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        presenter.isFavorito();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+    {
+        outState.putBoolean("isFavorite",isFavorite);
+        outState.putParcelable("people",people);
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+        isFavorite =  savedInstanceState.getBoolean("isFavorite");
+        people     =  savedInstanceState.getParcelable("people");
     }
 
     private void initViews(People p)
@@ -64,18 +99,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                if(!isFavorite)
-                {
-                    int color = ContextCompat.getColor(getContext(),android.R.color.holo_orange_light);
-                    DrawableCompat.setTint(DrawableCompat.wrap(fab.getDrawable()), color);
-                    isFavorite = true;
-                }
-                else{
-                    int color = ContextCompat.getColor(getContext(),android.R.color.darker_gray);
-
-                    DrawableCompat.setTint(DrawableCompat.wrap(fab.getDrawable()), color);
-                    isFavorite = false;
-                }
+                presenter.favoritar();
             }
         });
 
@@ -83,5 +107,22 @@ public class DetailsActivity extends AppCompatActivity {
 
     private Context getContext(){
         return this;
+    }
+
+    @Override
+    public void atualizarFAB(boolean isFavorite)
+    {
+        if(isFavorite)
+        {
+            int color = ContextCompat.getColor(getContext(),android.R.color.holo_orange_light);
+            DrawableCompat.setTint(DrawableCompat.wrap(fab.getDrawable()), color);
+            this.isFavorite = true;
+        }
+        else
+        {
+            int color = ContextCompat.getColor(getContext(),android.R.color.darker_gray);
+            DrawableCompat.setTint(DrawableCompat.wrap(fab.getDrawable()), color);
+            this.isFavorite = false;
+        }
     }
 }

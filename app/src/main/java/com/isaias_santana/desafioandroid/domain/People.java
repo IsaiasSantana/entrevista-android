@@ -39,7 +39,9 @@ public class People implements Serializable, Parcelable
     private ArrayList<String> species;
 
 
-    public People(){}
+    public People(){
+        this.id = 0;
+    }
 
 
     protected People(Parcel in)

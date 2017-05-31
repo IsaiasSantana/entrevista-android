@@ -88,6 +88,11 @@ public class PeopleAdapter extends RecyclerView.Adapter
 
     }
 
+    public People getPeople(int position)
+    {
+        return mData.get(position);
+    }
+
     public void setFilter(final List<People> peoples)
     {
         handler.post(new Runnable() {

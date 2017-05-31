@@ -177,7 +177,8 @@ public class MainActivity extends MvpAppCompatActivity
             public void onItemClicked(RecyclerView recyclerView, int position, View v)
             {
                 Intent intent = new Intent(MainActivity.this,DetailsActivity.class);
-                People p =  presenter.getDatas().get(position);
+
+                People p =  peopleAdapter.getPeople(position);
                 intent.putExtra("people",(Parcelable) p);
                 startActivity(intent);
             }
@@ -210,7 +211,7 @@ public class MainActivity extends MvpAppCompatActivity
         {
             final String text = model.getName().toLowerCase();
            // int result = instance.compare(text.substring(0,query.length()),query);
-            if (text.startsWith(query))
+            if (text.contains(query))
             {
                 filteredModelList.add(model);
             }

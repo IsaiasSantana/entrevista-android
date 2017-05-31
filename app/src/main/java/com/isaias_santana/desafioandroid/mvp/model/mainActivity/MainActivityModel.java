@@ -96,23 +96,30 @@ public class MainActivityModel implements MainActivityModelI
     {
         for(final People p : peoples)
         {
-            Call<Planet> call = peopleAPI
-                    .getPlanetName(getIdPlanetOrSpecie(p.getHomeWorld(),"planets"));
-            call.enqueue(new Callback<Planet>() {
-                @Override
-                public void onResponse(Call<Planet> call, Response<Planet> response)
-                {
-                    if(response.isSuccessful())
+            if(p.getHomeWorld() == null || p.getHomeWorld().isEmpty())
+            {
+                p.setHomeWorld("Desconhecido");
+            }
+            else
+            {
+                Call<Planet> call = peopleAPI
+                        .getPlanetName(getIdPlanetOrSpecie(p.getHomeWorld(),"planets"));
+                call.enqueue(new Callback<Planet>() {
+                    @Override
+                    public void onResponse(Call<Planet> call, Response<Planet> response)
                     {
-                        p.setHomeWorld(response.body().getName());
+                        if(response.isSuccessful())
+                        {
+                            p.setHomeWorld(response.body().getName());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Planet> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<Planet> call, Throwable t) {
 
-                }
-            });
+                    }
+                });
+            }
         }
 
     }
@@ -121,25 +128,34 @@ public class MainActivityModel implements MainActivityModelI
     {
         for(final People p : peoples)
         {
-            Call<Specie> call = peopleAPI
-                    .getEspecieName(getIdPlanetOrSpecie(p.getSpecies().get(0),"species"));
-            call.enqueue(new Callback<Specie>() {
-                @Override
-                public void onResponse(Call<Specie> call, Response<Specie> response)
-                {
-                    if(response.isSuccessful())
+            if(p.getSpecies().isEmpty())
+            {
+                ArrayList<String> species = new ArrayList<String>();
+                species.add("Não especificado.");
+                p.setSpecies(species);
+            }
+            else
+            {
+                Call<Specie> call = peopleAPI
+                        .getEspecieName(getIdPlanetOrSpecie(p.getSpecies().get(0),"species"));
+                call.enqueue(new Callback<Specie>() {
+                    @Override
+                    public void onResponse(Call<Specie> call, Response<Specie> response)
                     {
-                        ArrayList<String> species = new ArrayList<String>();
-                        species.add(response.body().getName());
-                        p.setSpecies(species);
+                        if(response.isSuccessful())
+                        {
+                            ArrayList<String> species = new ArrayList<String>();
+                            species.add(response.body().getName());
+                            p.setSpecies(species);
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Specie> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<Specie> call, Throwable t) {
 
-                }
-            });
+                    }
+                });
+            }
         }
 
     }
