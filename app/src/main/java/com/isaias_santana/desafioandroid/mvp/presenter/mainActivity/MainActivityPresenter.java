@@ -93,15 +93,20 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
     @Override
     public void getPeoples()
     {
+        getViewState().internetConnection();
         Log.d("MainActivityPresenter","Chamado");
         //Se a lista está vazia, busca os primeiros personagens.
-        if(peoples.isEmpty())
+        if(peoples.isEmpty() && isInternetConnection)
         {
             Log.d("MainActivityPresenter","Chamado lista vazia");
             getViewState().showProgressBar();
             model.getPeoples(getPage(nextPage));
 
         }
+        else if(peoples.isEmpty() && !isInternetConnection)
+            {
+                getAllDataBaseLocal();
+            }
         else
         {
             Log.d("presenterMain","Lista não vazia");
@@ -114,6 +119,12 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
     public void getMoreData()
     {
         getViewState().internetConnection();
+
+        if(!isInternetConnection && nextPage != null && !isLoading)
+        {
+            getAllDataBaseLocal();
+        }
+
         if(isInternetConnection && !isLoading && nextPage != null)
         {
             Log.d("MainActivityPresenter","tem internet getMoreData");
@@ -128,10 +139,7 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityViewI>
             return;
         }
 
-        if(!isInternetConnection && nextPage != null && !isLoading)
-        {
-            getAllDataBaseLocal();
-        }
+
     }
 
     public void setContext(Context context)
