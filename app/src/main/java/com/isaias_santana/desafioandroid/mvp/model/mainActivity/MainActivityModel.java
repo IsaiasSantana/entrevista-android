@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 
-import com.isaias_santana.desafioandroid.domain.DBHelper;
 import com.isaias_santana.desafioandroid.domain.People;
 import com.isaias_santana.desafioandroid.domain.PeopleResult;
 import com.isaias_santana.desafioandroid.domain.Planet;
@@ -30,8 +29,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivityModel implements MainActivityModelI
 {
     private static final String BASE_URL = "http://swapi.co/api/";
+
     private final MainActivityPresenterI.PresenterToModel presenter;
+
     private final PeopleAPI peopleAPI;
+
     private final Handler handler;
 
 
@@ -54,7 +56,8 @@ public class MainActivityModel implements MainActivityModelI
 
                 call.enqueue(new Callback<PeopleResult>() {
                     @Override
-                    public void onResponse(@NonNull Call<PeopleResult> call, @NonNull Response<PeopleResult> response) {
+                    public void onResponse(@NonNull Call<PeopleResult> call,
+                                           @NonNull Response<PeopleResult> response) {
                         if (response.isSuccessful())
                         {
                             PeopleResult peopleResult = response.body();
@@ -62,12 +65,13 @@ public class MainActivityModel implements MainActivityModelI
                             assert peopleResult != null;
                             List<People> peoples = peopleResult.getPeoples();
 
-                            if(peoples != null && peoples.get(0)!= null)
+                            if(peoples != null && peoples.get(0)!= null) //recuperou os dados
                             {
                                 Log.d("model","Sucesso!");
-                                presenter.setPeople(peoples,peopleResult.getNext());
+
                                 getHomeWorld(peoples);
                                 getSpecie(peoples);
+                                presenter.setPeople(peoples,peopleResult.getNext());
                             }
                             else presenter.setPeople(null,null);
 
@@ -77,7 +81,7 @@ public class MainActivityModel implements MainActivityModelI
                     public void onFailure(@NonNull Call<PeopleResult> call, @NonNull Throwable t)
                     {
                         t.printStackTrace();
-                        presenter.setPeople(null,null);
+
                     }
                 }); // Fim do Callback<PeopleResult>().
             }
@@ -92,72 +96,86 @@ public class MainActivityModel implements MainActivityModelI
                 .build();
     }
 
+    /*Procura pelo planeta natal*/
     private void getHomeWorld(final List<People> peoples)
     {
-        for(final People p : peoples)
-        {
-            if(p.getHomeWorld() == null || p.getHomeWorld().isEmpty())
-            {
-                p.setHomeWorld("Desconhecido");
-            }
-            else
-            {
-                Call<Planet> call = peopleAPI
-                        .getPlanetName(getIdPlanetOrSpecie(p.getHomeWorld(),"planets"));
-                call.enqueue(new Callback<Planet>() {
-                    @Override
-                    public void onResponse(Call<Planet> call, Response<Planet> response)
-                    {
-                        if(response.isSuccessful())
-                        {
-                            p.setHomeWorld(response.body().getName());
-                        }
-                    }
+       handler.post(new Runnable() {
+           @Override
+           public void run()
+           {
+               for(final People p : peoples)
+               {
+                   if(p.getHomeWorld() == null || p.getHomeWorld().isEmpty())
+                   {
+                       p.setHomeWorld("Desconhecido");
+                   }
+                   else
+                   {
+                       Call<Planet> call = peopleAPI
+                               .getPlanetName(getIdPlanetOrSpecie(p.getHomeWorld(),"planets"));
+                       call.enqueue(new Callback<Planet>() {
+                           @Override
+                           public void onResponse(Call<Planet> call, Response<Planet> response)
+                           {
+                               if(response.isSuccessful())
+                               {
+                                   p.setHomeWorld(response.body().getName());
+                                   Log.d("sp",response.body().getName());
+                               }
+                           }
 
-                    @Override
-                    public void onFailure(Call<Planet> call, Throwable t) {
+                           @Override
+                           public void onFailure(Call<Planet> call, Throwable t) {
 
-                    }
-                });
-            }
-        }
+                           }
+                       });
+                   }
+               }
+           }
+       });
+
 
     }
 
     private void getSpecie(final List<People> peoples)
     {
-        for(final People p : peoples)
-        {
-            if(p.getSpecies().isEmpty())
-            {
-                ArrayList<String> species = new ArrayList<String>();
-                species.add("Não especificado.");
-                p.setSpecies(species);
-            }
-            else
-            {
-                Call<Specie> call = peopleAPI
-                        .getEspecieName(getIdPlanetOrSpecie(p.getSpecies().get(0),"species"));
-                call.enqueue(new Callback<Specie>() {
-                    @Override
-                    public void onResponse(Call<Specie> call, Response<Specie> response)
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for(final People p : peoples)
+                {
+                    if(p.getSpecies().isEmpty())
                     {
-                        if(response.isSuccessful())
-                        {
-                            ArrayList<String> species = new ArrayList<String>();
-                            species.add(response.body().getName());
-                            p.setSpecies(species);
-                        }
+                        ArrayList<String> species = new ArrayList<String>();
+                        species.add("Não especificado.");
+                        p.setSpecies(species);
                     }
+                    else
+                    {
+                        Call<Specie> call = peopleAPI
+                                .getEspecieName(getIdPlanetOrSpecie(p.getSpecies().get(0),"species"));
+                        call.enqueue(new Callback<Specie>() {
+                            @Override
+                            public void onResponse(Call<Specie> call, Response<Specie> response)
+                            {
+                                if(response.isSuccessful())
+                                {
+                                    ArrayList<String> species = new ArrayList<String>();
+                                    species.add(response.body().getName());
+                                    p.setSpecies(species);
+                                    Log.d("sp",response.body().getName());
+                                }
+                            }
 
-                    @Override
-                    public void onFailure(Call<Specie> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<Specie> call, Throwable t) {
 
+                            }
+                        });
                     }
-                });
+                }
             }
-        }
-
+        });
     }
 
     private String getIdPlanetOrSpecie(String url,String tag)

@@ -6,4 +6,13 @@
         android:icon="@drawable/ic_magnify"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item
+        android:id="@+id/action_favorite"
+        android:checkable="true"
+        android:checked="false"
+        android:title="Listar os favoritos"
+        app:actionViewClass="android.widget.CheckBox"
+        app:showAsAction="never" />
+
 </menu>

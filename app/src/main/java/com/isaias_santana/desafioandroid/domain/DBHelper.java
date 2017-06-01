@@ -18,7 +18,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper
 {
     private static final String TAG = "sql";
-    public static final String NOME_BANCO = "com.isaias_santana.desafioandroid";
+    private static final String NOME_BANCO = "com.isaias_santana.desafioandroid";
     private static final int VERSAO_BANCO = 1;
 
     private static final String TABLE_PEOPLE =
@@ -35,7 +35,8 @@ public class DBHelper extends SQLiteOpenHelper
                             "birthYear   TEXT," +
                             "homeWorld   TEXT," +
                             "species     TEXT," +
-                            "is_favorite INTEGER);";
+                            "is_favorite INTEGER," +
+                            "page        TEXT);";
 
 
 
@@ -80,6 +81,7 @@ public class DBHelper extends SQLiteOpenHelper
             cv.put("homeWorld", people.getHomeWorld());
             cv.put("species", people.getSpecies().get(0));
             cv.put("is_favorite", people.getIsFavorite());
+            cv.put("page",people.getPage());
 
             if (id != 0)
             {
@@ -114,6 +116,19 @@ public class DBHelper extends SQLiteOpenHelper
             return toList(c);
         }
         finally {
+            db.close();
+        }
+    }
+
+    public List<People> getAllPeoples(String next)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        try
+        {
+            //SELECT * FROM people WHERE page="name" LIMIT 30
+            Cursor c = db.query("people",null,"page=?",new String[]{next},null,null,null,null);
+            return toList(c);
+        }finally {
             db.close();
         }
     }
@@ -168,6 +183,7 @@ public class DBHelper extends SQLiteOpenHelper
                 people.setEyeColor(c.getString(c.getColumnIndex("eyeColor")));
                 people.setBirthYear(c.getString(c.getColumnIndex("birthYear")));
                 people.setHomeWorld(c.getString(c.getColumnIndex("homeWorld")));
+                people.setPage(c.getString(c.getColumnIndex("page")));
 
                 ArrayList<String> species = new ArrayList<>();
                 species.add(c.getString(c.getColumnIndex("species")));

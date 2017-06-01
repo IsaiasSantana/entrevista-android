@@ -16,4 +16,14 @@
     <string name="detalhes_personagem">Outros detalhes</string>
     <string name="descricao_imagem_toolbar">Logo do Star Wars</string>
     <string name="title_activity_teste">Teste</string>
+    <string name="exit_app">Sair</string>
+    <string name="exit_app_yes">Sim</string>
+    <string name="exit_app_no">Não</string>
+    <string name="title_activity_favoritos">FavoritosActivity</string>
+    <string name="personagens">Personagens</string>
+    <string name="favoritos">Meus favoritos</string>
+    <string name="lista_favoritos_vazia">Você não possui personagem favorito!</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="aguarde">Aguarde...</string>
 </resources>

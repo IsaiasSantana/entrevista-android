@@ -15,4 +15,22 @@ public interface DetailActivityViewI extends MvpView
      *                   usuário. Um false, o oposto.
      */
     void atualizarFAB(boolean isFavorite);
+
+    /**
+     * Exibe uma mensagem de Toast
+     * @param message a mensagem a ser exibida.
+     */
+    void showToast(String message);
+
+    /**
+     * Exibe uma mensagem usando o Sneack
+     * @param message a mensagem a ser exibida.
+     */
+    void showSneakBar(String message);
+
+    /**
+     * Envia uma mensagem de Broadcast carregando uma
+     * Intent com o objeto que o usuário tira do seus favoritos.
+     */
+    void sendBroadCast();
 }

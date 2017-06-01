@@ -20,6 +20,7 @@ public class People implements Serializable, Parcelable
     private String gender;
     private String mass;
     private int isFavorite;
+    private String page;
 
     @SerializedName("hair_color")
     private String hairColor;
@@ -58,6 +59,7 @@ public class People implements Serializable, Parcelable
         homeWorld = in.readString();
         species = in.createStringArrayList();
         isFavorite = in.readInt();
+        page = in.readString();
     }
 
     public static final Creator<People> CREATOR = new Creator<People>()
@@ -181,6 +183,7 @@ public class People implements Serializable, Parcelable
         dest.writeString(homeWorld);
         dest.writeStringList(species);
         dest.writeInt(isFavorite);
+        dest.writeString(page);
     }
 
     public int getIsFavorite() {
@@ -189,5 +192,13 @@ public class People implements Serializable, Parcelable
 
     public void setIsFavorite(int isFavorite) {
         this.isFavorite = isFavorite;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
     }
 }

@@ -34,8 +34,8 @@ public class PeopleViewHolder extends RecyclerView.ViewHolder
     public void setData(People people)
     {
         name.setText(people.getName());
-        height.setText(people.getHeight());
+        height.setText(people.getHeight()+" cm");
         gender.setText(people.getGender());
-        mass.setText(people.getMass());
+        mass.setText(people.getMass()+" Kg");
     }
 }

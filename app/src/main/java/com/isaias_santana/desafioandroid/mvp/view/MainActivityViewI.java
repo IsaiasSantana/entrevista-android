@@ -17,4 +17,7 @@ public interface MainActivityViewI extends MvpView
     void hideProgressBar();
     void addNullToAdapter();
     void removeNullFromAdapter();
+    void clearDatasAdapater();
+    void internetConnection();
+    void filter(List<People> peoples);
 }

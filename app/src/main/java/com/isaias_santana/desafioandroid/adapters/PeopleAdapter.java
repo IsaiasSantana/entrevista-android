@@ -27,6 +27,12 @@ public class PeopleAdapter extends RecyclerView.Adapter
     private final int VIEW_PROGRESS_BAR = 1;
     private Handler handler;
 
+    public PeopleAdapter(List<People> peoples)
+    {
+        this.handler = new Handler();
+        this.mData = peoples;
+    }
+
     public PeopleAdapter()
     {
         this.handler = new Handler();
@@ -88,6 +94,17 @@ public class PeopleAdapter extends RecyclerView.Adapter
 
     }
 
+    public void clear(){
+        handler.post(new Runnable() {
+            @Override
+            public void run()
+            {
+                mData.clear();
+                notifyDataSetChanged();
+            }
+        });
+    }
+
     public People getPeople(int position)
     {
         return mData.get(position);
@@ -99,7 +116,7 @@ public class PeopleAdapter extends RecyclerView.Adapter
             @Override
             public void run()
             {
-               PeopleAdapter.this.mData = new ArrayList<>();
+                PeopleAdapter.this.mData = new ArrayList<>();
                 PeopleAdapter.this.mData.addAll(peoples);
                 notifyDataSetChanged();
             }

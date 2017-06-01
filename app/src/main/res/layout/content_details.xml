@@ -258,12 +258,14 @@
 
                 <TextView
                     android:id="@+id/tv_detalhes_altura"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_horizontal|center|end"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="10dp"
+                    android:gravity="right|end"
                     android:text="170 cm" />
             </LinearLayout>
 
@@ -287,12 +289,13 @@
 
                 <TextView
                     android:id="@+id/tv_detalhes_peso"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:gravity="right|end"
                     android:text="80kg" />
             </LinearLayout>
 
@@ -315,12 +318,13 @@
 
                 <TextView
                     android:id="@+id/tv_detalhes_genero"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:gravity="right|end"
                     android:text="female" />
             </LinearLayout>
 
@@ -343,12 +347,13 @@
 
                 <TextView
                     android:id="@+id/tv_detalhes_cabelo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:gravity="right|end"
                     android:text="black" />
             </LinearLayout>
 
@@ -372,12 +377,13 @@
 
                 <TextView
                     android:id="@+id/tv_detalhes_cor_pele"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:gravity="right|end"
                     android:text="White" />
             </LinearLayout>
 
@@ -400,12 +406,13 @@
 
                 <TextView
                     android:id="@+id/tv_detalhes_olhos"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:gravity="right|end"
                     android:text="black" />
             </LinearLayout>
 
